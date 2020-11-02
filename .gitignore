@@ -1,0 +1,16 @@
+target/
+azure-spring-data-cosmos-java-11-getting-started/target
+azure-spring-data-cosmos-java-getting-started/target
+cosmos-sync-quickstart-Java/target
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+# https://github.com/takari/maven-wrapper#usage-without-binary-jar
+.mvn/wrapper/maven-wrapper.jar
+.idea
+*.iml
