@@ -14,6 +14,10 @@
 		"CosmosDb1_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'CosmosDb1'"
+		},
+		"CosmosDb2_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'CosmosDb2'"
 		}
 	},
 	"variables": {
@@ -214,6 +218,240 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/hu1copydata2task')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "ForEach_jza",
+						"type": "ForEach",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@pipeline().parameters.cw_items",
+								"type": "Expression"
+							},
+							"activities": [
+								{
+									"name": "Copy_jza",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [
+										{
+											"name": "Source",
+											"value": "dbo.@{item().source.table}"
+										},
+										{
+											"name": "Destination",
+											"value": "movies"
+										}
+									],
+									"typeProperties": {
+										"source": {
+											"type": "AzureSqlSource",
+											"additionalColumns": {
+												"type": "Expression",
+												"value": "@item().copySource.additionalColumns"
+											},
+											"isolationLevel": {
+												"value": "@item().copySource.isolationLevel",
+												"type": "Expression"
+											},
+											"partitionOption": "None"
+										},
+										"sink": {
+											"type": "CosmosDbSqlApiSink",
+											"writeBehavior": {
+												"value": "@item().copySink.writeBehavior",
+												"type": "Expression"
+											},
+											"disableMetricsCollection": false
+										},
+										"enableStaging": false,
+										"parallelCopies": 4,
+										"validateDataConsistency": false
+									},
+									"inputs": [
+										{
+											"referenceName": "SourceDataset_jza",
+											"type": "DatasetReference",
+											"parameters": {
+												"cw_table": "@item().source.table"
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "DestinationDataset_jza",
+											"type": "DatasetReference",
+											"parameters": {}
+										}
+									]
+								}
+							]
+						}
+					}
+				],
+				"parameters": {
+					"cw_items": {
+						"type": "Array",
+						"defaultValue": [
+							{
+								"source": {
+									"table": "Cartitem"
+								},
+								"copySource": {
+									"additionalColumns": [
+										{
+											"name": "entityName",
+											"value": "Cartitem"
+										}
+									],
+									"isolationLevel": "Snapshot"
+								},
+								"copySink": {
+									"writeBehavior": "upsert"
+								}
+							},
+							{
+								"source": {
+									"table": "Category"
+								},
+								"copySource": {
+									"additionalColumns": [
+										{
+											"name": "entityName",
+											"value": "Category"
+										}
+									],
+									"isolationLevel": null
+								},
+								"copySink": {
+									"writeBehavior": "insert"
+								}
+							},
+							{
+								"source": {
+									"table": "Event"
+								},
+								"copySource": {
+									"additionalColumns": [
+										{
+											"name": "entityName",
+											"value": "Event"
+										}
+									],
+									"isolationLevel": null
+								},
+								"copySink": {
+									"writeBehavior": "insert"
+								}
+							},
+							{
+								"source": {
+									"table": "Item"
+								},
+								"copySource": {
+									"additionalColumns": [
+										{
+											"name": "entityName",
+											"value": "Item"
+										}
+									],
+									"isolationLevel": null
+								},
+								"copySink": {
+									"writeBehavior": "insert"
+								}
+							},
+							{
+								"source": {
+									"table": "ItemAggregate"
+								},
+								"copySource": {
+									"additionalColumns": [
+										{
+											"name": "entityName",
+											"value": "ItemAggregate"
+										}
+									],
+									"isolationLevel": null
+								},
+								"copySink": {
+									"writeBehavior": "insert"
+								}
+							},
+							{
+								"source": {
+									"table": "OrderDetails"
+								},
+								"copySource": {
+									"additionalColumns": [
+										{
+											"name": "entityName",
+											"value": "OrderDetails"
+										}
+									],
+									"isolationLevel": null
+								},
+								"copySink": {
+									"writeBehavior": "insert"
+								}
+							},
+							{
+								"source": {
+									"table": "Orders"
+								},
+								"copySource": {
+									"additionalColumns": [
+										{
+											"name": "entityName",
+											"value": "Orders"
+										}
+									],
+									"isolationLevel": null
+								},
+								"copySink": {
+									"writeBehavior": "insert"
+								}
+							},
+							{
+								"source": {
+									"table": "User"
+								},
+								"copySource": {
+									"additionalColumns": [
+										{
+											"name": "entityName",
+											"value": "User"
+										}
+									],
+									"isolationLevel": null
+								},
+								"copySink": {
+									"writeBehavior": "insert"
+								}
+							}
+						]
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/SourceDataset_jza')]",
+				"[concat(variables('factoryId'), '/datasets/DestinationDataset_jza')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/DestinationDataset_fxg')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -242,7 +480,56 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/DestinationDataset_jza')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "CosmosDb2",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "CosmosDbSqlApiCollection",
+				"schema": {},
+				"typeProperties": {
+					"collectionName": "movies"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/CosmosDb2')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/SourceDataset_fxg')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase1",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"cw_table": {
+						"type": "String"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": {
+						"value": "@dataset().cw_table",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SourceDataset_jza')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -292,6 +579,19 @@
 				"type": "CosmosDb",
 				"typeProperties": {
 					"connectionString": "[parameters('CosmosDb1_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CosmosDb2')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "CosmosDb",
+				"typeProperties": {
+					"connectionString": "[parameters('CosmosDb2_connectionString')]"
 				}
 			},
 			"dependsOn": []

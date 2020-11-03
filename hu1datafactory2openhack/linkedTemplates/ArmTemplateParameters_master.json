@@ -11,6 +11,9 @@
 		"CosmosDb1_connectionString": {
 			"value": ""
 		},
+		"CosmosDb2_connectionString": {
+			"value": ""
+		},
 		"containerUri": {
 			"value": ""
 		},
