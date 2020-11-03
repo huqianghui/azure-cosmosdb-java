@@ -49,10 +49,11 @@
 								},
 								"sink": {
 									"type": "CosmosDbSqlApiSink",
-									"writeBehavior": "insert"
+									"writeBehavior": "upsert",
+									"disableMetricsCollection": false
 								},
 								"enableStaging": false,
-								"parallelCopies": 1,
+								"parallelCopies": 4,
 								"validateDataConsistency": false
 							},
 							"inputs": [
