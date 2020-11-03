@@ -1,0 +1,15 @@
+{
+	"name": "DestinationDataset_mqp",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "CosmosDb2",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "CosmosDbSqlApiCollection",
+		"schema": {},
+		"typeProperties": {
+			"collectionName": "ItemWithCategory"
+		}
+	}
+}
