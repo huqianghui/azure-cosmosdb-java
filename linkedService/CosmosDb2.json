@@ -1,0 +1,12 @@
+{
+	"name": "CosmosDb2",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "CosmosDb",
+		"typeProperties": {
+			"connectionString": "AccountEndpoint=https://cos1accout2openhack.documents.azure.com:443/;Database=hu1database2openhack;",
+			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkhVMURBVEFGQUNUT1JZMk9QRU5IQUNLX2E1NjdhYWUwLTQyOGItNGEyYy04ZjE5LTU3MDViODIzODhkZCINCn0="
+		}
+	}
+}
