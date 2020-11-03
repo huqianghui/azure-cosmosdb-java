@@ -1,0 +1,186 @@
+{
+	"name": "CopyPipeline_fxg",
+	"properties": {
+		"activities": [
+			{
+				"name": "ForEach_fxg",
+				"type": "ForEach",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@pipeline().parameters.cw_items",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Copy_fxg",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [
+								{
+									"name": "Source",
+									"value": "dbo.@{item().source.table}"
+								},
+								{
+									"name": "Destination",
+									"value": "@{item().destination.collectionName}"
+								}
+							],
+							"typeProperties": {
+								"source": {
+									"type": "AzureSqlSource",
+									"queryTimeout": {
+										"value": "@item().copySource.queryTimeout",
+										"type": "Expression"
+									},
+									"isolationLevel": {
+										"value": "@item().copySource.isolationLevel",
+										"type": "Expression"
+									},
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "CosmosDbSqlApiSink",
+									"writeBehavior": "insert"
+								},
+								"enableStaging": false,
+								"parallelCopies": 1,
+								"validateDataConsistency": false
+							},
+							"inputs": [
+								{
+									"referenceName": "SourceDataset_fxg",
+									"type": "DatasetReference",
+									"parameters": {
+										"cw_table": "@item().source.table"
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "DestinationDataset_fxg",
+									"type": "DatasetReference",
+									"parameters": {
+										"cw_collectionName": "@item().destination.collectionName"
+									}
+								}
+							]
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"cw_items": {
+				"type": "Array",
+				"defaultValue": [
+					{
+						"source": {
+							"table": "Cartitem"
+						},
+						"destination": {
+							"collectionName": "Cartitem"
+						},
+						"copySource": {
+							"queryTimeout": "00:01:00",
+							"isolationLevel": "Snapshot"
+						}
+					},
+					{
+						"source": {
+							"table": "Category"
+						},
+						"destination": {
+							"collectionName": "Category"
+						},
+						"copySource": {
+							"queryTimeout": null,
+							"isolationLevel": null
+						}
+					},
+					{
+						"source": {
+							"table": "Event"
+						},
+						"destination": {
+							"collectionName": "Event"
+						},
+						"copySource": {
+							"queryTimeout": null,
+							"isolationLevel": null
+						}
+					},
+					{
+						"source": {
+							"table": "Item"
+						},
+						"destination": {
+							"collectionName": "Item"
+						},
+						"copySource": {
+							"queryTimeout": null,
+							"isolationLevel": null
+						}
+					},
+					{
+						"source": {
+							"table": "ItemAggregate"
+						},
+						"destination": {
+							"collectionName": "ItemAggregate"
+						},
+						"copySource": {
+							"queryTimeout": null,
+							"isolationLevel": null
+						}
+					},
+					{
+						"source": {
+							"table": "OrderDetails"
+						},
+						"destination": {
+							"collectionName": "OrderDetails"
+						},
+						"copySource": {
+							"queryTimeout": null,
+							"isolationLevel": null
+						}
+					},
+					{
+						"source": {
+							"table": "Orders"
+						},
+						"destination": {
+							"collectionName": "Orders"
+						},
+						"copySource": {
+							"queryTimeout": null,
+							"isolationLevel": null
+						}
+					},
+					{
+						"source": {
+							"table": "User"
+						},
+						"destination": {
+							"collectionName": "User"
+						},
+						"copySource": {
+							"queryTimeout": null,
+							"isolationLevel": null
+						}
+					}
+				]
+			}
+		},
+		"annotations": []
+	}
+}
